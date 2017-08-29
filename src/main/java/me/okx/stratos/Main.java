@@ -31,10 +31,13 @@ public class Main {
         }
 
         boolean useCodePage = false;
+        boolean decode = false;
 
         for(String arg : args) {
             if(arg.equalsIgnoreCase("-c")) {
                 useCodePage = true;
+            } else if(arg.equalsIgnoreCase("-u")) {
+                decode = true;
             }
         }
 
@@ -64,6 +67,25 @@ public class Main {
             program = new String(content);
         }
 
+        if(decode) {
+            StringBuilder builder = new StringBuilder();
+            StringBuilder on = new StringBuilder();
+            for(char c : program.toCharArray()) {
+                on.append(c);
+
+                for(int i = 0; i < CODE_PAGE.length; i++) {
+                    if(CODE_PAGE[i].equals(on.toString())) {
+                        builder.append(String.format("%02X ", i));
+                        on.setLength(0);
+                        break;
+                    }
+                }
+            }
+            System.out.println(builder.toString());
+
+            return;
+        }
+
         /*List<String> lines = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         String next = sc.nextLine();
@@ -77,6 +99,7 @@ public class Main {
     private static void printUsage() {
         System.out.println("java -jar Stratos-1.0-SNAPSHOT.jar\n" +
                 "Options:\n" +
-                "  -c By default, Stratos programs are read in unicode. This option makes Stratos read in its custom codepage.");
+                "  -c By default, Stratos programs are read in unicode. This option makes Stratos read in its custom codepage.\n" +
+                "  -u Decode from unicode to Stratos's encoding");
     }
 }
