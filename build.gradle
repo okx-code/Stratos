@@ -1,0 +1,34 @@
+group 'me.okx'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.json', name: 'json', version: '20090211'
+    compile group: 'commons-io', name: 'commons-io', version: '2.4'
+
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'me.okx.stratos.Main'
+    }
+}
