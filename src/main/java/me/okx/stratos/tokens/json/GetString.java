@@ -12,7 +12,6 @@ public class GetString extends Dyad {
     @Override
     public Variable run(Variable a, Variable b) {
         try {
-
             JSONObject json = new JSONObjectHolder(a).getValue();
 
             return new Holder<>(json.getString(b.toString()));

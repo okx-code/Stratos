@@ -1,15 +1,17 @@
 package me.okx.stratos.tokens.internet;
 
 import me.okx.stratos.tokens.types.Monad;
-import me.okx.stratos.var.StringHolder;
 import me.okx.stratos.var.Variable;
+import me.okx.stratos.var.holders.Holder;
 import org.apache.commons.io.IOUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 public class FetchData extends Monad {
     @Override
@@ -44,7 +46,7 @@ public class FetchData extends Monad {
                 content = new String(bytes);
             }
 
-            StringHolder fetched = new StringHolder(content);
+            Holder<String> fetched = new Holder<>(content);
 
             return fetched;
         } catch(IOException ex) {

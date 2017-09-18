@@ -1,5 +1,7 @@
 package me.okx.stratos;
 
+import me.okx.stratos.var.Variable;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -86,18 +88,15 @@ public class Main {
             return;
         }
 
-        /*List<String> lines = new ArrayList<>();
-        Scanner sc = new Scanner(System.in);
-        String next = sc.nextLine();
-        do {
-            lines.add(next);
-            next = sc.nextLine();
-        } while(!next.isEmpty());*/
-        System.out.println(new TokenManager(program.split("\\r?\\n")).getOutput());
+        Variable out = new TokenManager(program.split("\\r?\\n")).getOutput();
+
+        if(out != null) {
+            System.out.println(out);
+        }
     }
 
     private static void printUsage() {
-        System.out.println("java -jar Stratos-1.0-SNAPSHOT.jar\n" +
+        System.out.println("java -jar Stratos-1.0-SNAPSHOT.jar <file> <options>\n" +
                 "Options:\n" +
                 "  -c By default, Stratos programs are read in unicode. This option makes Stratos read in its custom codepage.\n" +
                 "  -u Decode from unicode to Stratos's encoding");

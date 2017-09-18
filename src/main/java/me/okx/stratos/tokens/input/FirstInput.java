@@ -4,14 +4,14 @@ import me.okx.stratos.tokens.types.Nilad;
 import me.okx.stratos.var.Variable;
 
 public class FirstInput extends Nilad {
-    private InputManager inputManager;
+    private StorageInput iu;
 
-    public FirstInput(InputManager inputManager) {
-        this.inputManager = inputManager;
+    public FirstInput(StorageInput iu) {
+        this.iu = iu;
     }
 
     @Override
     public Variable run() {
-        return inputManager.getInput(0);
+        return iu.get(0);
     }
 }

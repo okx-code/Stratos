@@ -22,6 +22,14 @@ public class StorageInput extends Nilad {
         }
     }
 
+    public Variable get(int n) {
+        if(data.size() > n) {
+            return data.get(n);
+        } else {
+            return data.push(inputManager.getInput());
+        }
+    }
+
     public void push(Variable v) {
         data.push(v);
     }

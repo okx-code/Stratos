@@ -13,12 +13,12 @@ public class ParseQuotedString {
     private static Map<String, String> replacements = new HashMap<>();
 
     static {
-        replacements.put("⁰", "http://");
+        replacements.put("⁰", "count");
         replacements.put("¹", "api.stackexchange.com/");
-        replacements.put("²", "site=codegolf");
+        replacements.put("²", "?site=codegolf");
         replacements.put("³", "display");
         replacements.put("⁴", "name");
-        replacements.put("⁵", "\"");
+        replacements.put("⁵", "question");
         replacements.put("⁶", "%");
         replacements.put("⁷", "item");
         replacements.put("⁸", "user");

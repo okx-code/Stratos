@@ -11,13 +11,14 @@ import me.okx.stratos.tokens.json.GetArray;
 import me.okx.stratos.tokens.json.GetNthElement;
 import me.okx.stratos.tokens.json.GetString;
 import me.okx.stratos.tokens.misc.dyad.Concatenate;
+import me.okx.stratos.tokens.misc.dyad.Divide;
 import me.okx.stratos.tokens.misc.dyad.Equality;
 import me.okx.stratos.tokens.misc.monad.Extend;
 import me.okx.stratos.tokens.types.ControlFlow;
 import me.okx.stratos.tokens.types.Token;
 import me.okx.stratos.util.ParseQuotedString;
-import me.okx.stratos.var.StringHolder;
 import me.okx.stratos.var.Variable;
+import me.okx.stratos.var.holders.Holder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TokenManager {
-    private String output;
+    private Variable output;
 
     private Map<String, Token> tokens = new HashMap<>();
 
@@ -36,9 +37,10 @@ public class TokenManager {
         // Data / Input
         tokens.put("{", new StoreData(input));
         tokens.put("I", input);
-        tokens.put("⁰", new FirstInput(iu));
+        tokens.put("⁰", new FirstInput(input));
 
         // Dyads
+        tokens.put("/", new Divide());
         tokens.put("+", new Concatenate());
         tokens.put("=", new Equality());
 
@@ -56,10 +58,10 @@ public class TokenManager {
         tokens.put("i", new If());
         // e: else
 
-        output = exec(program, input).toString();
+        output = exec(program, input);
     }
 
-    public String getOutput() {
+    public Variable getOutput() {
         return output;
     }
 
@@ -186,9 +188,9 @@ public class TokenManager {
 
         if(!program.isEmpty()) {
             if(program.startsWith("\"")) {
-                return new StringHolder(ParseQuotedString.parse(program, input));
+                return new Holder<>(ParseQuotedString.parse(program, input));
             } else if(program.matches("[0-9]+")) {
-                return new StringHolder(String.valueOf(Integer.parseInt(program)));
+                return new Holder<>(String.valueOf(Integer.parseInt(program)));
             }
 
             return tokens.get(chars.get(0)).eval(input);

@@ -1,7 +1,7 @@
 package me.okx.stratos.tokens.input;
 
-import me.okx.stratos.var.StringHolder;
 import me.okx.stratos.var.Variable;
+import me.okx.stratos.var.holders.Holder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ public class InputManager {
     private List<Variable> inputs = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
-    public StringHolder getInput() {
-        StringHolder input =  new StringHolder(scanner.nextLine());
+    public Holder<String> getInput() {
+        Holder<String> input =  new Holder<>(scanner.nextLine());
         inputs.add(input);
         return input;
     }
