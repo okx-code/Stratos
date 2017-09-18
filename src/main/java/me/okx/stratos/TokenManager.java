@@ -157,8 +157,6 @@ public class TokenManager {
                     right.append(chars.get(j));
                 }
 
-                System.out.println(left + " " + c + " " + right);
-
                 return t.eval(input, run(left.toString(), input), run(right.toString(), input));
             }
         }
