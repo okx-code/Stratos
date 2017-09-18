@@ -16,6 +16,7 @@ public class GetString extends Dyad {
 
             return new Holder<>(json.getString(b.toString()));
         } catch (JSONException e) {
+            System.out.println("l " + a + " r " + b);
             e.printStackTrace();
             return null;
         }
