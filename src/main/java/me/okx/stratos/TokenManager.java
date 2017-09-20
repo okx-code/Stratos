@@ -10,6 +10,7 @@ import me.okx.stratos.tokens.internet.UrlEscape;
 import me.okx.stratos.tokens.json.GetArray;
 import me.okx.stratos.tokens.json.GetNthElement;
 import me.okx.stratos.tokens.json.GetString;
+import me.okx.stratos.tokens.json.Length;
 import me.okx.stratos.tokens.misc.dyad.Concatenate;
 import me.okx.stratos.tokens.misc.dyad.Divide;
 import me.okx.stratos.tokens.misc.dyad.Equality;
@@ -50,6 +51,7 @@ public class TokenManager {
 
         // Monads
         tokens.put(">", new Extend());
+        tokens.put("l", new Length());
 
         tokens.put("s", new GetString());
         tokens.put("c", new UrlEscape());
