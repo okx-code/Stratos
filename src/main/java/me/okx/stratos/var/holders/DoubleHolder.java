@@ -8,4 +8,9 @@ public class DoubleHolder extends Holder<Double> {
     public DoubleHolder(String value) {
         super(Double.parseDouble(value));
     }
+
+    @Override
+    public String toString() {
+        return value.toString().replaceAll(".0$", "");
+    }
 }
