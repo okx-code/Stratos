@@ -2,12 +2,13 @@ package me.okx.stratos;
 
 import me.okx.stratos.tokens.control.FirstMatch;
 import me.okx.stratos.tokens.control.If;
-import me.okx.stratos.tokens.input.FirstInput;
 import me.okx.stratos.tokens.input.InputManager;
+import me.okx.stratos.tokens.input.NthInput;
 import me.okx.stratos.tokens.input.StorageInput;
 import me.okx.stratos.tokens.input.StoreData;
 import me.okx.stratos.tokens.internet.FetchData;
 import me.okx.stratos.tokens.internet.UrlEscape;
+import me.okx.stratos.tokens.internet.UrlUnescape;
 import me.okx.stratos.tokens.json.GetArray;
 import me.okx.stratos.tokens.json.GetNthElement;
 import me.okx.stratos.tokens.json.GetString;
@@ -39,7 +40,8 @@ public class TokenManager {
         // Data / Input
         tokens.put("{", new StoreData(input));
         tokens.put("I", input);
-        tokens.put("⁰", new FirstInput(input));
+        tokens.put("⁰", new NthInput(0, input));
+        tokens.put("¹", new NthInput(1, input));
 
         // Dyads
         tokens.put("/", new Divide());
@@ -56,6 +58,7 @@ public class TokenManager {
 
         tokens.put("s", new GetString());
         tokens.put("c", new UrlEscape());
+        tokens.put("u", new UrlUnescape());
 
         // Control
         tokens.put("i", new If()); // e
@@ -80,6 +83,11 @@ public class TokenManager {
     }
 
     public Variable run(String program, StorageInput input) {
+        if(program.isEmpty()) {
+            return input.run();
+        }
+
+
         List<String> chars = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
@@ -154,7 +162,9 @@ public class TokenManager {
                 for(int j = i+1; j < chars.size(); j++) {
                     right.append(chars.get(j));
                 }
-                return t.eval(input, run(left.toString(), input), run(right.toString(), input));
+                Variable leftRun = run(left.toString(), input);
+                Variable rightRun = run(right.toString(), input);
+                return t.eval(input, leftRun, rightRun);
             }
         }
 
@@ -183,15 +193,12 @@ public class TokenManager {
             }
         }
 
-        if(!program.isEmpty()) {
-            if(program.startsWith("\"")) {
-                return new Holder<>(ParseQuotedString.parse(program, input));
-            } else if(program.matches("[0-9]+")) {
-                return new Holder<>(String.valueOf(Integer.parseInt(program)));
-            }
-
-            return tokens.get(chars.get(0)).eval(input);
+        if(program.startsWith("\"")) {
+            return new Holder<>(ParseQuotedString.parse(program, input));
+        } else if(program.matches("[0-9]+")) {
+            return new Holder<>(String.valueOf(Integer.parseInt(program)));
         }
-        return input.run();
+
+        return tokens.get(chars.get(0)).eval(input);
     }
 }

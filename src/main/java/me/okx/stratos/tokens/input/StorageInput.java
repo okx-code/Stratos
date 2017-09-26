@@ -7,6 +7,7 @@ import java.util.Stack;
 
 public class StorageInput extends Nilad implements Cloneable {
     private Stack<Variable> data = new Stack<>();
+    private Stack<Variable> temp = new Stack<>();
     private InputManager inputManager;
 
     public StorageInput(InputManager inputManager) {
@@ -15,15 +16,27 @@ public class StorageInput extends Nilad implements Cloneable {
 
     @Override
     public Variable run() {
-        if(data.size() > 0) {
+        if(temp.size() > 0) {
+            return temp.pop();
+        } else if(data.size() > 0) {
             return data.pop();
         } else {
             return inputManager.getInput();
         }
     }
 
+    public void clearTemp() {
+        temp.clear();
+    }
+
+    public void addTemp(Variable var) {
+        temp.push(var);
+    }
+
     public Variable get(int n) {
-        if(data.size() > n) {
+        if(temp.size() > n) {
+            return temp.get(n);
+        } else if(data.size() > n) {
             return data.get(n);
         } else {
             return data.push(inputManager.getInput());

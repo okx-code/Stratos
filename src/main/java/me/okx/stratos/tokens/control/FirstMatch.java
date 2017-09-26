@@ -19,10 +19,10 @@ public class FirstMatch extends ControlFlow {
             JSONArray array =
                     new JSONArrayHolder(eval.run(left, input)).getValue();
             for(int i = 0; i < array.length(); i++) {
-                StorageInput clone = input.clone();
-                clone.push(new Holder<>(array.get(i)));
+                input.addTemp(new Holder<>(array.get(i)));
                 boolean value =
-                        new BooleanHolder(eval.run(right, clone).toString()).getValue();
+                        new BooleanHolder(eval.run(right, input).toString()).getValue();
+                input.clearTemp();
                 if(value) {
                     return Optional.of(new Holder<>(array.get(i)));
                 }

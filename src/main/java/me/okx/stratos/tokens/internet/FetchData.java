@@ -32,7 +32,8 @@ public class FetchData extends Monad {
             byte[] bytes = IOUtils.toByteArray(conn.getInputStream());
             String content;
 
-            if(conn.getContentEncoding().equalsIgnoreCase("gzip")) {
+            if(conn.getContentEncoding() != null &&
+                    conn.getContentEncoding().equalsIgnoreCase("gzip")) {
                 InputStream inStream = new GZIPInputStream(
                         new ByteArrayInputStream(bytes));
                 ByteArrayOutputStream baoStream2 = new ByteArrayOutputStream();
@@ -46,9 +47,7 @@ public class FetchData extends Monad {
                 content = new String(bytes);
             }
 
-            Holder<String> fetched = new Holder<>(content);
-
-            return fetched;
+            return new Holder<>(content);
         } catch(IOException ex) {
             ex.printStackTrace();
             return null;
