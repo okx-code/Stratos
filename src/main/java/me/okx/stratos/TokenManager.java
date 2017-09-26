@@ -1,5 +1,6 @@
 package me.okx.stratos;
 
+import me.okx.stratos.tokens.control.FirstMatch;
 import me.okx.stratos.tokens.control.If;
 import me.okx.stratos.tokens.input.FirstInput;
 import me.okx.stratos.tokens.input.InputManager;
@@ -57,8 +58,8 @@ public class TokenManager {
         tokens.put("c", new UrlEscape());
 
         // Control
-        tokens.put("i", new If());
-        // e: else
+        tokens.put("i", new If()); // e
+        tokens.put(")", new FirstMatch());
 
         output = exec(program, input);
     }
@@ -78,7 +79,7 @@ public class TokenManager {
         return null;
     }
 
-    private Variable run(String program, StorageInput input) {
+    public Variable run(String program, StorageInput input) {
         List<String> chars = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
@@ -96,8 +97,8 @@ public class TokenManager {
 
         boolean inString = false;
 
-        // Find rightmost control flow
-        for(int i = chars.size() - 1; i >= 0; i--) {
+        // Find leftmost control flow
+        for(int i = 0; i < chars.size(); i++) {
             String c = chars.get(i);
 
             if(c.equals("\"")) {
@@ -109,7 +110,6 @@ public class TokenManager {
             }
 
             Token t = tokens.get(c);
-
             if(t != null && t instanceof ControlFlow) {
                 // Scan left
                 StringBuilder left = new StringBuilder();
@@ -123,11 +123,9 @@ public class TokenManager {
                     right.append(chars.get(j));
                 }
 
-                if(((ControlFlow) t).check(run(left.toString(), input))) {
-                    return run(right.toString(), input);
-                } else if(right.toString().contains("e")) {
-                    return run(right.toString().split("e")[1], input);
-                }
+                return ((ControlFlow) t)
+                        .run(left.toString(), right.toString(), this, input)
+                        .orElse(new Holder<>(""));
             }
         }
 
@@ -144,8 +142,6 @@ public class TokenManager {
             }
 
             Token t = tokens.get(c);
-
-
             if(t != null && t.getArity() == 2) {
                 // Scan left
                 StringBuilder left = new StringBuilder();
@@ -158,7 +154,6 @@ public class TokenManager {
                 for(int j = i+1; j < chars.size(); j++) {
                     right.append(chars.get(j));
                 }
-
                 return t.eval(input, run(left.toString(), input), run(right.toString(), input));
             }
         }

@@ -5,7 +5,7 @@ import me.okx.stratos.var.Variable;
 
 import java.util.Stack;
 
-public class StorageInput extends Nilad {
+public class StorageInput extends Nilad implements Cloneable {
     private Stack<Variable> data = new Stack<>();
     private InputManager inputManager;
 
@@ -32,5 +32,11 @@ public class StorageInput extends Nilad {
 
     public void push(Variable v) {
         data.push(v);
+    }
+
+    public StorageInput clone() {
+        StorageInput clone = new StorageInput(inputManager.clone());
+        clone.data = (Stack<Variable>) data.clone();
+        return clone;
     }
 }

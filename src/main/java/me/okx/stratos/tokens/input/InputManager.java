@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class InputManager {
+public class InputManager implements Cloneable {
     private List<Variable> inputs = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
@@ -26,5 +26,12 @@ public class InputManager {
             getInput();
         }
         return inputs.get(id);
+    }
+
+    public InputManager clone() {
+        InputManager clone = new InputManager();
+        clone.inputs = new ArrayList<>(inputs);
+        clone.scanner = new Scanner(System.in);
+        return clone;
     }
 }
