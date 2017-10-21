@@ -16,17 +16,17 @@ import me.okx.stratos.tokens.json.Length;
 import me.okx.stratos.tokens.misc.dyad.Concatenate;
 import me.okx.stratos.tokens.misc.dyad.Divide;
 import me.okx.stratos.tokens.misc.dyad.Equality;
+import me.okx.stratos.tokens.misc.dyad.Subtract;
 import me.okx.stratos.tokens.misc.monad.Extend;
+import me.okx.stratos.tokens.misc.monad.Negate;
 import me.okx.stratos.tokens.types.ControlFlow;
 import me.okx.stratos.tokens.types.Token;
 import me.okx.stratos.util.ParseQuotedString;
 import me.okx.stratos.var.Variable;
 import me.okx.stratos.var.holders.Holder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class TokenManager {
     private Variable output;
@@ -34,7 +34,16 @@ public class TokenManager {
     private Map<String, Token> tokens = new HashMap<>();
 
     public TokenManager(String[] program) {
-        InputManager iu = new InputManager();
+        this(program, new String[0]);
+    }
+
+    public TokenManager(String[] program, String[] inputData) {
+        InputManager iu;
+        if(inputData.length > 0) {
+            iu = new InputManager(Arrays.stream(inputData).map(Holder::new).collect(Collectors.toList()));
+        } else {
+            iu = new InputManager();
+        }
         StorageInput input = new StorageInput(iu);
 
         // Data / Input
@@ -44,6 +53,7 @@ public class TokenManager {
         tokens.put("¹", new NthInput(1, input));
 
         // Dyads
+        tokens.put("-", new Subtract());
         tokens.put("/", new Divide());
         tokens.put("+", new Concatenate());
         tokens.put("=", new Equality());
@@ -53,6 +63,7 @@ public class TokenManager {
         tokens.put("f", new FetchData());
 
         // Monads
+        tokens.put("_", new Negate());
         tokens.put(">", new Extend());
         tokens.put("l", new Length());
 
@@ -71,7 +82,7 @@ public class TokenManager {
         return output;
     }
 
-    private Variable exec(String[] lines, StorageInput input) {
+    public Variable exec(String[] lines, StorageInput input) {
         for(int i = 0; i < lines.length; i++) {
             if(i == lines.length - 1) {
                 return run(lines[i], input);
