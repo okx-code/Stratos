@@ -27,6 +27,12 @@ public class FetchData extends Monad {
 
                 conn.setRequestProperty("Accept-Encoding", "gzip");
 
+                if(conn.getResponseCode() < 200 ||
+                        (conn.getResponseCode() >= 300 && conn.getResponseCode() < 400) ||
+                        conn.getResponseCode() >= 600) {
+                    continue;
+                }
+
                 byte[] bytes = IOUtils.toByteArray(conn.getInputStream());
                 String content;
 
